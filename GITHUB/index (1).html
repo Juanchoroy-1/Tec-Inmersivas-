@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Multiplicación</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .juego {
+            background-color: white;
+            max-width: 500px;
+            margin: auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #aaa;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #pregunta {
+            font-size: 30px;
+            margin: 25px;
+        }
+
+        .opcion {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+            padding: 12px;
+            font-size: 18px;
+            border: none;
+            border-radius: 6px;
+            background-color: #e6e6e6;
+            cursor: pointer;
+        }
+
+        .opcion:hover {
+            background-color: #cccccc;
+        }
+
+        #mensaje {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 20px;
+        }
+
+        #siguiente, #reiniciar {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            background-color: #0066cc;
+            color: white;
+        }
+
+        #reiniciar {
+            background-color: #555;
+        }
+
+        #puntaje {
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="juego">
+        <h1>Quiz de Multiplicación</h1>
+
+        <p>Tablas del 1 al 5</p>
+
+        <div id="puntaje">Puntaje: 0</div>
+
+        <div id="pregunta">1 × 1 = ?</div>
+
+        <button class="opcion" onclick="responder(0)" id="opcion0"></button>
+        <button class="opcion" onclick="responder(1)" id="opcion1"></button>
+        <button class="opcion" onclick="responder(2)" id="opcion2"></button>
+        <button class="opcion" onclick="responder(3)" id="opcion3"></button>
+
+        <div id="mensaje"></div>
+
+        <button id="siguiente" onclick="nuevaPregunta()">Siguiente pregunta</button>
+        <button id="reiniciar" onclick="reiniciarJuego()">Reiniciar</button>
+    </div>
+
+    <script>
+        let numero1;
+        let numero2;
+        let respuestaCorrecta;
+        let puntaje = 0;
+        let respondido = false;
+
+        function nuevaPregunta() {
+            respondido = false;
+
+            // Generar números de las tablas del 1 al 5
+            numero1 = Math.floor(Math.random() * 5) + 1;
+            numero2 = Math.floor(Math.random() * 10) + 1;
+
+            respuestaCorrecta = numero1 * numero2;
+
+            document.getElementById("pregunta").textContent =
+                numero1 + " × " + numero2 + " = ?";
+
+            document.getElementById("mensaje").textContent = "";
+
+            let respuestas = [
+                respuestaCorrecta,
+                respuestaCorrecta + 1,
+                respuestaCorrecta - 1,
+                respuestaCorrecta + 2
+            ];
+
+            // Mezclar las respuestas
+            respuestas.sort(() => Math.random() - 0.5);
+
+            for (let i = 0; i < 4; i++) {
+                document.getElementById("opcion" + i).textContent = respuestas[i];
+                document.getElementById("opcion" + i).disabled = false;
+            }
+        }
+
+        function responder(opcion) {
+            if (respondido) {
+                return;
+            }
+
+            respondido = true;
+
+            let respuesta = Number(
+                document.getElementById("opcion" + opcion).textContent
+            );
+
+            if (respuesta === respuestaCorrecta) {
+                puntaje++;
+                document.getElementById("mensaje").textContent =
+                    "¡Correcto!";
+            } else {
+                document.getElementById("mensaje").textContent =
+                    "Incorrecto. La respuesta era " + respuestaCorrecta;
+            }
+
+            document.getElementById("puntaje").textContent =
+                "Puntaje: " + puntaje;
+
+            for (let i = 0; i < 4; i++) {
+                document.getElementById("opcion" + i).disabled = true;
+            }
+        }
+
+        function reiniciarJuego() {
+            puntaje = 0;
+
+            document.getElementById("puntaje").textContent =
+                "Puntaje: 0";
+
+            nuevaPregunta();
+        }
+
+        // Iniciar el juego
+        nuevaPregunta();
+    </script>
+
+</body>
+</html>
